@@ -1,18 +1,16 @@
 package az.orient.bankboot55client.controller;
 
 import az.orient.bankboot55client.api.request.ReqToken;
-import az.orient.bankboot55client.api.response.RespCustomer;
 import az.orient.bankboot55client.api.response.RespCustomerList;
 import az.orient.bankboot55client.util.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/client")
+//@RequestMapping("/client")
 public class CustomerController {
 
     @Value("${api.url}")
@@ -44,7 +42,7 @@ public class CustomerController {
         try {
             String url = apiUrl + "customer/GetCustomerList";
             ReqToken reqToken = new ReqToken();
-            reqToken.setUserId(Long.valueOf(apiUserId));
+            reqToken.setId(Long.valueOf(apiUserId));
             reqToken.setToken(apiToken);
             String reqTokenJson = objectMapper.writeValueAsString(reqToken);
             String result = utility.sendPost(url, reqTokenJson);

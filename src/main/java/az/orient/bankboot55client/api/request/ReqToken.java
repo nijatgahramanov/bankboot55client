@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ReqToken {
-    private Long userId;
+    private Long id;
     private String token;
 }
