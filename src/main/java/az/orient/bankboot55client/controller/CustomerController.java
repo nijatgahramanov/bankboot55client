@@ -2,11 +2,15 @@ package az.orient.bankboot55client.controller;
 
 import az.orient.bankboot55client.api.request.ReqToken;
 import az.orient.bankboot55client.api.response.RespCustomerList;
+import az.orient.bankboot55client.api.response.RespUser;
 import az.orient.bankboot55client.util.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +28,8 @@ public class CustomerController {
 
     private final Utility utility;
 
+    private final HttpServletRequest request;
+
     ObjectMapper objectMapper = new ObjectMapper();
 
 
@@ -37,26 +43,26 @@ public class CustomerController {
     }
 
     @GetMapping("/GetCustomerList")
-    public @ResponseBody
-    String getCustomerList() {
+    public ModelAndView getCustomerList() {
+        ModelAndView model = new ModelAndView("index");
         try {
+            RespUser respUser = (RespUser) request.getSession(false).getAttribute("respUser");
             String url = apiUrl + "customer/GetCustomerList";
             ReqToken reqToken = new ReqToken();
-            reqToken.setId(Long.valueOf(apiUserId));
-            reqToken.setToken(apiToken);
+            reqToken.setId(respUser.getRespToken().getUserId());
+            reqToken.setToken(respUser.getRespToken().getToken());
             String reqTokenJson = objectMapper.writeValueAsString(reqToken);
             String result = utility.sendPost(url, reqTokenJson);
-            System.out.println(result);
             RespCustomerList respCustomerList = objectMapper.readValue(result, RespCustomerList.class);
             if (respCustomerList.getStatus().getCode() == 1) {
-                System.out.println(respCustomerList.getResponse());
+                model.addObject("customerList",respCustomerList.getResponse());
             } else {
-                System.out.println(respCustomerList.getStatus().getMessage());
+                model.addObject("msg",respCustomerList.getStatus().getMessage());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return "success";
+        return model;
     }
 
 

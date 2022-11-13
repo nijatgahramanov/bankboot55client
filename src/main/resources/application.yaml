@@ -8,3 +8,9 @@ api:
   userId: 1
   token: 0f0f785f-f435-4005-8e7f-8849a6b7f702
 
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/pages/
+      suffix: .jsp
+
