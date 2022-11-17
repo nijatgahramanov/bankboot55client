@@ -1,7 +1,9 @@
 package az.orient.bankboot55client.controller;
 
+import az.orient.bankboot55client.api.request.ReqCustomer;
 import az.orient.bankboot55client.api.request.ReqToken;
 import az.orient.bankboot55client.api.response.RespCustomerList;
+import az.orient.bankboot55client.api.response.Response;
 import az.orient.bankboot55client.api.response.RespUser;
 import az.orient.bankboot55client.util.Utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +44,7 @@ public class CustomerController {
         return "success";
     }
 
-    @GetMapping("/GetCustomerList")
+    @GetMapping("/getCustomerList")
     public ModelAndView getCustomerList() {
         ModelAndView model = new ModelAndView("index");
         try {
@@ -54,15 +56,45 @@ public class CustomerController {
             String reqTokenJson = objectMapper.writeValueAsString(reqToken);
             String result = utility.sendPost(url, reqTokenJson);
             RespCustomerList respCustomerList = objectMapper.readValue(result, RespCustomerList.class);
-            if (respCustomerList.getStatus().getCode() == 1) {
-                model.addObject("customerList",respCustomerList.getResponse());
+            if (respCustomerList.getStatus().getCode() == 1 || respCustomerList.getStatus().getCode()==107) {
+                model.addObject("customerList", respCustomerList.getResponse());
             } else {
-                model.addObject("msg",respCustomerList.getStatus().getMessage());
+                model.addObject("msg", respCustomerList.getStatus().getMessage());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return model;
+    }
+
+    @GetMapping("/newCustomer")
+    public ModelAndView newCustomer() {
+        ModelAndView model = new ModelAndView("customer/newCustomer");
+        return model;
+    }
+
+    @PostMapping("/addCustomer")
+    public @ResponseBody
+    String addCustomer(@RequestBody ReqCustomer reqCustomer) {
+        String response = "error";
+        try {
+            RespUser respUser = (RespUser) request.getSession(false).getAttribute("respUser");
+            ReqToken reqToken = new ReqToken();
+            reqToken.setId(respUser.getRespToken().getUserId());
+            reqToken.setToken(respUser.getRespToken().getToken());
+            reqCustomer.setReqToken(reqToken);
+
+            String reqJson = objectMapper.writeValueAsString(reqCustomer);
+            String result = utility.sendPost(apiUrl + "customer/AddCustomer", "reqJson");
+            Response respStatusList = objectMapper.readValue(result, Response.class);
+            System.out.println("response : "+respStatusList);
+            if (respStatusList.getStatus().getCode() == 1) {
+                response = "success";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return response;
     }
 
 

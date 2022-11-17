@@ -46,16 +46,15 @@ public class LoginController {
                 reqUser.setPassword(password);
                 String reqUserJson = objectMapper.writeValueAsString(reqUser);
                 String result = utility.sendPost(apiUrl + "user/login", reqUserJson);
-                RespUser respUser = (RespUser) objectMapper.readValue(result, RespUser.class);
-                if (respUser.getStatus().getCode() == 1) {
+                RespUser respUser = objectMapper.readValue(result, RespUser.class);
+                if (respUser.getStatus().getCode() == 1 || respUser.getStatus().getCode()==107) {
                     HttpSession session = request.getSession(true);
                     session.setAttribute("respUser", respUser);
-                    redirectView = new RedirectView("/client/GetCustomerList");
+                    redirectView = new RedirectView("/client/getCustomerList");
                 } else {
                     redirectView = new RedirectView("/client/loginView");
                     redirectView.addStaticAttribute("msg", respUser.getStatus().getMessage());
                 }
-
             } else {
                 redirectView = new RedirectView("/client/loginView");
                 redirectView.addStaticAttribute("msg", "Username or password is empty");
@@ -63,8 +62,7 @@ public class LoginController {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-        return null;
+        return redirectView;
     }
 
 
