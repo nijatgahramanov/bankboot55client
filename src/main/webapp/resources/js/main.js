@@ -39,7 +39,7 @@ function addCustomer(){
 
         },
         success: function (response){
-            if(response=='success'){
+            if(response==='success'){
                 alert('Added is success!')
             }else{
                 alert('Added is fail')

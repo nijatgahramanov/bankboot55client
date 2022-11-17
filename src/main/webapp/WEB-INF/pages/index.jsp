@@ -20,7 +20,7 @@ ${customerList}
 
 <a href="${pageContext.request.contextPath}/newCustomer"><input type="button" value="New"></a>
 
-<table border="1" style="width: 100px;">
+<table border="1" style="width: 1500px;">
     <tr>
         <th>#</th>
         <th>Username</th>

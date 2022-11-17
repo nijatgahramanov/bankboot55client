@@ -51,7 +51,7 @@ public class CustomerController {
             RespUser respUser = (RespUser) request.getSession(false).getAttribute("respUser");
             String url = apiUrl + "customer/GetCustomerList";
             ReqToken reqToken = new ReqToken();
-            reqToken.setId(respUser.getRespToken().getUserId());
+            reqToken.setUserId(respUser.getRespToken().getUserId());
             reqToken.setToken(respUser.getRespToken().getToken());
             String reqTokenJson = objectMapper.writeValueAsString(reqToken);
             String result = utility.sendPost(url, reqTokenJson);
@@ -80,7 +80,7 @@ public class CustomerController {
         try {
             RespUser respUser = (RespUser) request.getSession(false).getAttribute("respUser");
             ReqToken reqToken = new ReqToken();
-            reqToken.setId(respUser.getRespToken().getUserId());
+            reqToken.setUserId(respUser.getRespToken().getUserId());
             reqToken.setToken(respUser.getRespToken().getToken());
             reqCustomer.setReqToken(reqToken);
 

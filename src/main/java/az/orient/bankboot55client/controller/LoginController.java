@@ -33,7 +33,6 @@ public class LoginController {
         model.addObject("msg", msg);
         return model;
     }
-
     @PostMapping("/login")
     public RedirectView login(@RequestParam("username") String username,
                               @RequestParam("password") String password) {
