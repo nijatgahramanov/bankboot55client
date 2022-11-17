@@ -43,6 +43,7 @@ function addCustomer(){
                 alert('Added is success!')
             }else{
                 alert('Added is fail')
+                window.location = 'http://localhost:8084/client/getCustomerList';
             }
         }
     })
